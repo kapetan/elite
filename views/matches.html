@@ -28,7 +28,7 @@
 						<div class="form-group">
 							<label for="participants-first" class="col-md-3 control-label">First Player</label>
 							<div class="col-md-5">
-								<select id="participants-first" name="participants" class="form-control">
+								<select id="participants-first" name="participants" class="form-control" tabindex="1" autofocus>
 									<% league.participants.forEach(function(participant) { %>
 										<option <%= user.id === participant.id ? 'selected' : '' %> value="<%= participant.id %>">
 											<%= participant.name %>
@@ -37,13 +37,13 @@
 								</select>
 							</div>
 							<div class="col-md-1">
-								<input name="scores" type="text" class="form-control text-right" placeholder="0">
+								<input name="scores" type="text" class="form-control text-right" placeholder="0" tabindex="2">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="participants-second" class="col-md-3 control-label">Second Player</label>
 							<div class="col-md-5">
-								<select id="participants-second" name="participants" class="form-control">
+								<select id="participants-second" name="participants" class="form-control" tabindex="3">
 									<% league.participants.forEach(function(participant) { %>
 										<option value="<%= participant.id %>">
 											<%= participant.name %>
@@ -52,7 +52,7 @@
 								</select>
 							</div>
 							<div class="col-md-1">
-								<input name="scores" type="text" class="form-control text-right" placeholder="0">
+								<input name="scores" type="text" class="form-control text-right" placeholder="0" tabindex="4">
 							</div>
 						</div>
 						<div class="form-group">

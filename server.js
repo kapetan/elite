@@ -103,7 +103,7 @@ app.get('/accounts/signout', function(req, res, next) {
 });
 
 app.all(function(req, res, next) {
-	if(!req.user) return next(errors.Unauthorized());
+	if(!req.user) return res.redirect('/accounts/signin');
 	next();
 });
 
