@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leagues</title>
+
+	<%- include('_head.html') %>
+</head>
+<body>
+	<div id="app" class="container">
+		<%- include('_navbar.html', { active: 'leagues' }) %>
+
+		<% if(locals.create) { %>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title">Leagues</h2>
+					<small>Create</small>
+				</div>
+				<div class="panel-body">
+					<% if(locals.error) { %>
+						<div class="alert alert-danger">
+							<div class="col-md-offset-3">
+								<b>Error!</b> Something went wrong...
+							</div>
+						</div>
+					<% } %>
+
+					<form class="form-horizontal" method="POST" action="/leagues?create">
+						<div class="form-group">
+							<label for="owner" class="col-md-3 control-label">Owner</label>
+							<div class="col-md-6">
+								<p class="form-control-static"><%= user.email %></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="name" class="col-md-3 control-label">Name</label>
+							<div class="col-md-6">
+								<input name="name" type="text" class="form-control" id="name" placeholder="Name">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-3 col-md-6">
+								<button type="submit" class="btn btn-primary">Create</button>
+								<a href="/leagues" class="btn btn-default">Cancel</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		<% } %>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-10">
+						<h2 class="panel-title">Leagues</h2>
+						<small>Overview</small>
+					</div>
+					<div class="col-md-2 text-right">
+						<a class="btn btn-primary" href="/leagues?create">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table class="table leagues">
+					<tbody>
+						<% leagues.forEach(function(league) { %>
+							<tr>
+								<td>
+									<h4 class="name">
+										<a href="/leagues/<%= league.id %>/rankings"><%= league.name %></a>
+									</h4>
+									<div class="participants">
+										<% league.participants.forEach(function(participant) { %>
+											<img
+												class="profile-image"
+												src="<%= participant.profile %>"
+												title="<%= participant.name %>"
+												data-toggle="tooltip"
+												data-placement="bottom"
+												data-animation="false">
+										<% }) %>
+									</div>
+								</td>
+							</tr>
+						<% }) %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$('[data-toggle="tooltip"]').tooltip();
+	</script>
+</body>
+</html>

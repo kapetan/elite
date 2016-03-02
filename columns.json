@@ -1,0 +1,44 @@
+{
+    "league_owners": [
+        "id",
+        "user_id",
+        "league_id",
+        "created_at",
+        "updated_at"
+    ],
+    "league_participants": [
+        "id",
+        "user_id",
+        "league_id",
+        "created_at",
+        "updated_at"
+    ],
+    "leagues": [
+        "created_at",
+        "id",
+        "name",
+        "updated_at"
+    ],
+    "match_participants": [
+        "updated_at",
+        "id",
+        "score",
+        "match_id",
+        "user_id",
+        "created_at"
+    ],
+    "matches": [
+        "id",
+        "league_id",
+        "created_at",
+        "updated_at"
+    ],
+    "users": [
+        "id",
+        "name",
+        "email",
+        "password",
+        "created_at",
+        "updated_at"
+    ]
+}

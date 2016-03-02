@@ -1,0 +1,62 @@
+#app {
+	margin-top: 20px;
+}
+
+#app .text-default {
+	color: #777;
+}
+
+#app .table .col-small {
+	width: 5%;
+}
+
+#app .table .col-medium {
+	width: 20%;
+}
+
+#app .table.table-media tbody tr td {
+	line-height: 40px;
+}
+
+#app .table.table-media .separator td {
+	border-top-width: 2px;
+}
+
+#app .table.leagues tr:first-child td {
+	border-top: none;
+}
+
+#app .table.leagues .name {
+	margin-top: 0;
+}
+
+#app .table.leagues .participants {
+	height: 20px;
+}
+
+#app .table.leagues .profile-image {
+	width: 20px;
+	height: auto;
+}
+
+#app .table.matches .score {
+	margin: 0;
+	text-align: center;
+}
+
+#app .table.matches .date {
+	background-color: #f5f5f5;
+	color: #878787;
+}
+
+#app .table.matches .date td {
+	line-height: inherit;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+#app .profile-image {
+	border-radius: 100%;
+	width: 40px;
+	height: 40px;
+}

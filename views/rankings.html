@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rankings</title>
+
+	<%- include('_head.html') %>
+</head>
+<body>
+	<div id="app" class="container">
+		<%- include('_navbar.html', { active: 'rankings' }) %>
+
+		<% if(locals.create) { %>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title"><%= league.name %></h2>
+					<small>Add Player</small>
+				</div>
+				<div class="panel-body">
+					<% if(locals.error) { %>
+						<div class="alert alert-danger">
+							<div class="col-md-offset-3">
+								<b>Error!</b> Something went wrong...
+							</div>
+						</div>
+					<% } %>
+
+					<form class="form-horizontal" method="POST" action="/leagues/<%= league.id %>/rankings?create">
+						<div class="form-group">
+							<label for="email" class="col-md-3 control-label">Player</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="email" id="email" placeholder="user@example.com">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-3 col-md-6">
+								<button type="submit" class="btn btn-primary">Add</button>
+								<a href="/leagues/<%= league.id %>/rankings" class="btn btn-default">Cancel</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		<% } %>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-10">
+						<h2 class="panel-title"><%= league.name %></h2>
+						<small>Rankings</small>
+					</div>
+					<div class="col-md-2 text-right">
+						<a class="btn btn-primary" href="/leagues/<%= league.id %>/rankings?create">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<%# if(rankings.length) { %>
+					<table class="table table-media">
+						<thead>
+							<tr>
+								<th class="col-small">#</th>
+								<th>Name</th>
+								<th class="col-small">GP</th>
+								<th class="col-small">W</th>
+								<th class="col-small">D</th>
+								<th class="col-small">L</th>
+								<th class="col-small">PF</th>
+								<th class="col-small">PA</th>
+								<th class="col-small text-right">PTS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% rankings.forEach(function(ranking, i) { %>
+								<tr>
+									<td><%= i + 1 %></td>
+									<td>
+										<div class="media">
+											<div class="media-left">
+												<img class="media-object profile-image" src="<%= ranking.user.profile %>">
+											</div>
+											<div class="media-body">
+												<%= ranking.user.name %>
+											</div>
+										</div>
+									</td>
+									<td><%= ranking.gp %></td>
+									<td><%= ranking.w %></td>
+									<td><%= ranking.d %></td>
+									<td><%= ranking.l %></td>
+									<td><%= ranking.pf %></td>
+									<td><%= ranking.pa %></td>
+									<td class="text-right"><strong><%= ranking.pts %></strong></td>
+								</tr>
+							<% }) %>
+
+							<% unranked.forEach(function(user, i) { %>
+								<tr class="<%= (i === 0 && rankings.length && unranked.length) ? 'separator' : '' %>">
+									<td>-</td>
+									<td>
+										<div class="media">
+											<div class="media-left">
+												<img class="media-object profile-image" src="<%= user.profile %>">
+											</div>
+											<div class="media-body">
+												<%= user.name %>
+											</div>
+										</div>
+									</td>
+									<td>0</td>
+									<td>0</td>
+									<td>0</td>
+									<td>0</td>
+									<td>0</td>
+									<td>0</td>
+									<td class="text-right"><strong>-</strong></td>
+								</tr>
+							<% }) %>
+						</tbody>
+					</table>
+				<%# } %>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

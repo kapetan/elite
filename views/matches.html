@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Matches</title>
+
+	<%- include('_head.html') %>
+</head>
+<body>
+	<div id="app" class="container">
+		<%- include('_navbar.html', { active: 'matches' }) %>
+
+		<% if(locals.create) { %>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title"><%= league.name %></h2>
+					<small>Record Match</small>
+				</div>
+				<div class="panel-body">
+					<% if(locals.error) { %>
+						<div class="alert alert-danger">
+							<div class="col-md-offset-3">
+								<b>Error!</b> Something went wrong...
+							</div>
+						</div>
+					<% } %>
+
+					<form class="form-horizontal" method="POST" action="/leagues/<%= league.id %>/matches?create">
+						<div class="form-group">
+							<label for="participants-first" class="col-md-3 control-label">First Player</label>
+							<div class="col-md-5">
+								<select id="participants-first" name="participants" class="form-control">
+									<% league.participants.forEach(function(participant) { %>
+										<option <%= user.id === participant.id ? 'selected' : '' %> value="<%= participant.id %>">
+											<%= participant.name %>
+										</option>
+									<% }) %>
+								</select>
+							</div>
+							<div class="col-md-1">
+								<input name="scores" type="text" class="form-control text-right" placeholder="0">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="participants-second" class="col-md-3 control-label">Second Player</label>
+							<div class="col-md-5">
+								<select id="participants-second" name="participants" class="form-control">
+									<% league.participants.forEach(function(participant) { %>
+										<option value="<%= participant.id %>">
+											<%= participant.name %>
+										</option>
+									<% }) %>
+								</select>
+							</div>
+							<div class="col-md-1">
+								<input name="scores" type="text" class="form-control text-right" placeholder="0">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-3 col-md-6">
+								<button type="submit" class="btn btn-primary">Create</button>
+								<a href="/leagues/<%= league.id %>/matches" class="btn btn-default">Cancel</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		<% } %>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-10">
+						<h2 class="panel-title"><%= league.name %></h2>
+						<small>Matches</small>
+					</div>
+					<div class="col-md-2 text-right">
+						<a class="btn btn-primary" href="/leagues/<%= league.id %>/matches?create">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<% if(matches.length) { %>
+					<table class="table table-media matches">
+						<tbody>
+							<% matches.forEach(function(match, i) { %>
+								<% if(!i || matches[i - 1].date !== match.date) { %>
+									<tr class="date">
+										<td colspan="3"><small><%= match.date %></small></td>
+									</tr>
+								<% } %>
+								<tr>
+									<td>
+										<div class="media">
+											<div class="media-left">
+												<img class="media-object profile-image" src="<%= match.participants[0].user.profile %>">
+											</div>
+											<div class="media-body">
+												<%= match.participants[0].user.name %>
+											</div>
+										</div>
+									</td>
+									<td class="col-medium">
+										<h2 class="score">
+											<span class="label label-default"><%= match.participants[0].score %></span>
+											<span class="text-default"> - </span>
+											<span class="label label-default"><%= match.participants[1].score %></span>
+										</h2>
+									</td>
+									<td>
+										<div class="media">
+											<div class="media-body text-right">
+												<%= match.participants[1].user.name %>
+											</div>
+											<div class="media-right">
+												<img class="media-object profile-image" src="<%= match.participants[1].user.profile %>">
+											</div>
+										</div>
+									</td>
+								</tr>
+							<% }) %>
+						</tbody>
+					</table>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
