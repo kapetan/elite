@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var qs = require('querystring');
+var crypto = require('crypto');
 var root = require('root');
 var send = require('send');
 var ejs = require('ejs');
@@ -14,6 +15,7 @@ var Match = require('./models/match');
 
 var PORT = process.env.PORT || 20202;
 var ENV = process.env.NODE_ENV || 'development';
+var SECRET = process.env.SECRET || 'secret';
 
 var app = root();
 
@@ -36,28 +38,39 @@ app.use('response.render', function(filename, locals) {
 app.use('request.session', { getter: true }, function() {
 	var cookies = this.headers.cookie;
 	cookies = cookies ? cookie.parse(cookies) : null;
-	return cookies && cookies.session;
+	var session = cookies && cookies.session;
+
+	if(session) {
+		var decipher = crypto.createDecipher('aes256', SECRET);
+
+		try {
+			session = decipher.update(session, 'hex', 'utf-8');
+			session += decipher.final('utf-8');
+		} catch(err) {
+			session = null;
+		}
+
+		return session;
+	}
 });
 
 app.use('response.session', { setter: true }, function(value) {
 	var session = null;
 
-	if(value) session = cookie.serialize('session', value, { path: '/' });
-	else session = cookie.serialize('session', 'null', { path: '/', expires: new Date(0) });
+	if(value) {
+		var cipher = crypto.createCipher('aes256', SECRET);
+		session = cipher.update(String(value), 'utf-8', 'hex');
+		session += cipher.final('hex');
+		session = cookie.serialize('session', session, { path: '/' });
+	}
+	else {
+		session = cookie.serialize('session', 'null', {
+			path: '/',
+			expires: new Date(0)
+		});
+	}
 
 	this.setHeader('Set-Cookie', session);
-});
-
-app.all(function(req, res, next) {
-	var id = req.session;
-	if(!id) return next();
-
-	User.find({ id: id }, function(err, user) {
-		if(err) return next(err);
-
-		req.user = user;
-		next();
-	});
 });
 
 app.get('/css/*', function(req, res, next) {
@@ -100,6 +113,18 @@ app.post('/accounts/signup', function(req, res, next) {
 app.get('/accounts/signout', function(req, res, next) {
 	res.session = null;
 	res.redirect('/accounts/signin');
+});
+
+app.all(function(req, res, next) {
+	var id = req.session;
+	if(!id) return next();
+
+	User.find({ id: id }, function(err, user) {
+		if(err) return next(err);
+
+		req.user = user;
+		next();
+	});
 });
 
 app.all(function(req, res, next) {
@@ -239,8 +264,9 @@ app.post('/leagues/{league}/matches', function(req, res, next) {
 		var user = req.user;
 		var league = req.league;
 		var isParticipant = league.findParticipant(user);
+		var isOwner = league.findOwner(user);
 
-		if(!isParticipant) return next(errors.Forbidden('Only league participants can create matches'));
+		if(!isParticipant && !isOwner) return next(errors.Forbidden('Only league participants and owners can create matches'));
 
 		var participants = body.participants.map(function(id, i) {
 			return {
