@@ -78,7 +78,8 @@ app.get('/css/*', function(req, res, next) {
 });
 
 app.get('/accounts/signin', function(req, res, next) {
-	res.render('signin.html');
+	var error = ('error' in req.query);
+	res.render('signin.html', { error: error });
 });
 
 app.post('/accounts/signin', function(req, res, next) {
@@ -98,7 +99,8 @@ app.post('/accounts/signin', function(req, res, next) {
 });
 
 app.get('/accounts/signup', function(req, res, next) {
-	res.render('signup.html');
+	var error = ('error' in req.query);
+	res.render('signup.html', { error: error });
 });
 
 app.post('/accounts/signup', function(req, res, next) {

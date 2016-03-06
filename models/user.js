@@ -25,9 +25,19 @@ User.valid = validator({
 	type: 'object',
 	additionalProperties: false,
 	properties: {
-		name: { type: 'string' },
-		email: { type: 'string' },
-		password: { type: 'string' }
+		name: {
+			type: 'string',
+			minLength: 1
+		},
+		email: {
+			type: 'string',
+			format: 'email',
+			minLength: 1
+		},
+		password: {
+			type: 'string',
+			minLength: 1
+		}
 	},
 	required: ['name', 'email', 'password']
 });

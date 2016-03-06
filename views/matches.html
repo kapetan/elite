@@ -74,9 +74,11 @@
 						<small>Matches</small>
 					</div>
 					<div class="col-md-2 text-right">
-						<a class="btn btn-primary" href="/leagues/<%= league.id %>/matches?create">
-							<span class="glyphicon glyphicon-plus"></span>
-						</a>
+						<% if(league.findOwner(user) || league.findParticipant(user)) { %>
+							<a class="btn btn-primary" href="/leagues/<%= league.id %>/matches?create">
+								<span class="glyphicon glyphicon-plus"></span>
+							</a>
+						<% } %>
 					</div>
 				</div>
 			</div>

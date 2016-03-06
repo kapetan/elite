@@ -50,9 +50,11 @@
 						<small>Rankings</small>
 					</div>
 					<div class="col-md-2 text-right">
-						<a class="btn btn-primary" href="/leagues/<%= league.id %>/rankings?create">
-							<span class="glyphicon glyphicon-plus"></span>
-						</a>
+						<% if(league.findOwner(user)) { %>
+							<a class="btn btn-primary" href="/leagues/<%= league.id %>/rankings?create">
+								<span class="glyphicon glyphicon-plus"></span>
+							</a>
+						<% } %>
 					</div>
 				</div>
 			</div>
@@ -63,13 +65,13 @@
 							<tr>
 								<th class="col-small">#</th>
 								<th>Name</th>
-								<th class="col-small">GP</th>
-								<th class="col-small">W</th>
-								<th class="col-small">D</th>
-								<th class="col-small">L</th>
-								<th class="col-small">PF</th>
-								<th class="col-small">PA</th>
-								<th class="col-small text-right">PTS</th>
+								<th class="col-small" title="Games Played">GP</th>
+								<th class="col-small" title="Wins">W</th>
+								<th class="col-small" title="Draws">D</th>
+								<th class="col-small" title="Losses">L</th>
+								<th class="col-small" title="Points For">PF</th>
+								<th class="col-small" title="Points Against">PA</th>
+								<th class="col-small text-right" title="Points">PTS</th>
 							</tr>
 						</thead>
 						<tbody>
