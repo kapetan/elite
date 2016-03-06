@@ -77,6 +77,10 @@ app.get('/css/*', function(req, res, next) {
 	send(req, req.params['*'], { root: path.join(__dirname, 'css') }).pipe(res);
 });
 
+app.get('/', function(req, res) {
+	res.redirect('/leagues');
+});
+
 app.get('/accounts/signin', function(req, res, next) {
 	var error = ('error' in req.query);
 	res.render('signin.html', { error: error });

@@ -6,6 +6,10 @@
 	color: #777;
 }
 
+#app .table {
+	margin-bottom: 0;
+}
+
 #app .table .col-small {
 	width: 5%;
 }
@@ -28,6 +32,7 @@
 
 #app .table.leagues .name {
 	margin-top: 0;
+	margin-bottom: 0;
 }
 
 #app .table.leagues .participants {
