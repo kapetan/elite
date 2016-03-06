@@ -1,0 +1,3 @@
+# elite
+
+	npm start
