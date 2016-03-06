@@ -367,11 +367,11 @@ app.error('4xx', function(req, res, err) {
 	console.error(err.stack || err.message || err);
 
 	var method = req.method;
-	var body = req.body;
-	var url = body.referrer || req.url;
 
 	if(method !== 'POST' || !err.HttpError) return res.send(err.stack || err.message);
 
+	var body = req.body;
+	var url = body && body.referrer || req.url;
 	var sep = (/\?/.test(url)) ? '&' : '?';
 
 	url = url + sep + qs.stringify({ error: 1 });
