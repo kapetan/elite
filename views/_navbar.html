@@ -6,6 +6,10 @@
 			<% if(locals.league) { %>
 				<li class="<%= locals.active === 'rankings' ? 'active' : '' %>"><a href="/leagues/<%= league.id %>/rankings">Rankings</a></li>
 				<li class="<%= locals.active === 'matches' ? 'active' : '' %>"><a href="/leagues/<%= league.id %>/matches">Matches</a></li>
+
+				<% if(league.findOwner(user)) { %>
+					<li class="<%= locals.active === 'owners' ? 'active' : '' %>"><a href="/leagues/<%= league.id %>/owners">Owners</a></li>
+				<% } %>
 			<% } %>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">

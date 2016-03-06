@@ -199,6 +199,40 @@ League.addOwner = function(id, user, callback) {
 		});
 };
 
+League.deleteOwner = function(id, user, callback) {
+	db.transaction(function(transaction) {
+		var onerror = function(err) {
+			transaction
+				.rollback()
+				.asCallback(function() {
+					callback(err);
+				});
+		};
+
+		var onsuccess = function() {
+			transaction
+				.commit()
+				.asCallback(function(err) {
+					callback(err)
+				});
+		};
+
+		var count = db.raw('(select count(*) from "league_owners" where "league_id" = ?) > 1', id);
+
+		db
+			.del()
+			.from('league_owners')
+			.where({ user_id: user.id, league_id: id })
+			.andWhere(count)
+			.transacting(transaction)
+			.asCallback(function(err) {
+				if(err) return onerror(err);
+				onsuccess();
+			});
+	})
+	.asCallback(noop);
+};
+
 League.addParticipant = function(id, user, callback) {
 	var now = new Date();
 

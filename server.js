@@ -73,6 +73,17 @@ app.use('response.session', { setter: true }, function(value) {
 	this.setHeader('Set-Cookie', session);
 });
 
+app.use('request.form', function(callback) {
+	var self = this;
+
+	if(this.body) return callback(this.body);
+
+	this.on('form', function(body) {
+		self.body = body;
+		callback(body);
+	});
+});
+
 app.get('/css/*', function(req, res, next) {
 	send(req, req.params['*'], { root: path.join(__dirname, 'css') }).pipe(res);
 });
@@ -87,7 +98,7 @@ app.get('/accounts/signin', function(req, res, next) {
 });
 
 app.post('/accounts/signin', function(req, res, next) {
-	req.on('form', function(body) {
+	req.form(function(body) {
 		User.find({ email: body.email }, function(err, user) {
 			if(err) return next(err);
 
@@ -108,7 +119,7 @@ app.get('/accounts/signup', function(req, res, next) {
 });
 
 app.post('/accounts/signup', function(req, res, next) {
-	req.on('form', function(body) {
+	req.form(function(body) {
 		User.create(body, function(err, user) {
 			if(err) return next(err);
 			res.redirect('/accounts/signin');
@@ -159,7 +170,7 @@ app.get('/accounts/settings', function(req, res, next) {
 });
 
 app.post('/accounts/settings', function(req, res, next) {
-	req.on('form', function(body) {
+	req.form(function(body) {
 		var user = req.user;
 
 		user.authenticate(body.current_password, function(err, authenticated) {
@@ -191,7 +202,7 @@ app.get('/leagues', function(req, res, next) {
 });
 
 app.post('/leagues', function(req, res, next) {
-	req.on('form', function(body) {
+	req.form(function(body) {
 		League.create(body, req.user, function(err, league) {
 			if(err) return next(err);
 			res.redirect('/leagues');
@@ -226,7 +237,7 @@ app.get('/leagues/{league}/rankings', function(req, res, next) {
 });
 
 app.post('/leagues/{league}/rankings', function(req, res, next) {
-	req.on('form', function(body) {
+	req.form(function(body) {
 		var league = req.league;
 		var isOwner = league.findOwner(req.user);
 
@@ -234,6 +245,10 @@ app.post('/leagues/{league}/rankings', function(req, res, next) {
 
 		User.find({ email: body.email }, function(err, user) {
 			if(err) return next(err);
+
+			var alreadyParticipant = league.findParticipant(user);
+
+			if(alreadyParticipant) return next(errors.UnprocessableEntity('User is already a participant'));
 
 			League.addParticipant(league.id, user, function(err) {
 				if(err) return next(err);
@@ -263,7 +278,7 @@ app.get('/leagues/{league}/matches', function(req, res, next) {
 });
 
 app.post('/leagues/{league}/matches', function(req, res, next) {
-	req.on('form', function(body) {
+	req.form(function(body) {
 		if(Array.isArray(body.scores)) body.scores = body.scores.map(parseFloat);
 		if(!Match.valid(body)) return next(errors.UnprocessableEntity('Invalid match data'));
 
@@ -294,10 +309,69 @@ app.post('/leagues/{league}/matches', function(req, res, next) {
 	});
 });
 
+app.get('/leagues/{league}/owners', function(req, res, next) {
+	var create = ('create' in req.query);
+	var error = ('error' in req.query);
+
+	res.render('owners.html', {
+		league: req.league,
+		user: req.user,
+		create: create,
+		error: error
+	});
+});
+
+app.post('/leagues/{league}/owners', function(req, res, next) {
+	req.form(function(body) {
+		var league = req.league;
+		var isOwner = league.findOwner(req.user);
+
+		if(!isOwner) return next(errors.Forbidden('Only league owners can add owners'));
+
+		User.find({ email: body.email }, function(err, user) {
+			if(err) return next(err);
+
+			var alreadyOwner = league.findOwner(user);
+
+			if(alreadyOwner) return next(errors.UnprocessableEntity('User is already an owner'));
+
+			League.addOwner(league.id, user, function(err) {
+				if(err) return next(err);
+				res.redirect('/leagues/' + league.id + '/owners');
+			});
+		});
+	});
+});
+
+app.post('/leagues/{league}/owners/delete', function(req, res, next) {
+	req.form(function(body) {
+		var league = req.league;
+		var isOwner = league.findOwner(req.user);
+		var isLast = league.owners.length === 1;
+
+		if(!isOwner) return next(errors.Forbidden('Only league owners can delete owners'));
+		if(isLast) return next(errors.UnprocessableEntity('Cannot delete last owner'));
+
+		User.find({ id: body.user }, function(err, user) {
+			if(err) return next(err);
+
+			League.deleteOwner(league.id, user, function(err) {
+				if(err) return next(err);
+				res.redirect('/leagues/' + league.id + '/owners');
+			});
+		});
+	});
+});
+
 app.error('4xx', function(req, res, err) {
 	console.error(err.stack || err.message || err);
 
-	var url = req.url;
+	var method = req.method;
+	var body = req.body;
+	var url = body.referrer || req.url;
+
+	if(method !== 'POST' || !err.HttpError) return res.send(err.stack || err.message);
+
 	var sep = (/\?/.test(url)) ? '&' : '?';
 
 	url = url + sep + qs.stringify({ error: 1 });

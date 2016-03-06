@@ -6,6 +6,10 @@
 	color: #777;
 }
 
+#app .well {
+	margin-bottom: 0;
+}
+
 #app .table {
 	margin-bottom: 0;
 }
@@ -18,6 +22,14 @@
 	width: 20%;
 }
 
+#app .table tr .btn-hidden {
+	display: none;
+}
+
+#app .table tr:hover .btn-hidden {
+	display: inline-block;
+}
+
 #app .table.table-media tbody tr td {
 	line-height: 40px;
 }
@@ -26,7 +38,8 @@
 	border-top-width: 2px;
 }
 
-#app .table.leagues tr:first-child td {
+#app .table.leagues tr:first-child td,
+#app .table.owners tr:first-child td {
 	border-top: none;
 }
 

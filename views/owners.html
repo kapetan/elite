@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Owners</title>
+
+	<%- include('_head.html') %>
+</head>
+<body>
+	<div id="app" class="container">
+		<%- include('_navbar.html', { active: 'owners' }) %>
+
+		<% if(locals.create) { %>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title"><%= league.name %></h2>
+					<small>Add Owner</small>
+				</div>
+				<div class="panel-body">
+					<% if(locals.error) { %>
+						<div class="alert alert-danger">
+							<div class="col-md-offset-3">
+								<b>Error!</b> Something went wrong...
+							</div>
+						</div>
+					<% } %>
+
+					<form class="form-horizontal" method="POST" action="/leagues/<%= league.id %>/owners?create">
+						<div class="form-group">
+							<label for="email" class="col-md-3 control-label">Owner</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="email" id="email" placeholder="user@example.com" tabindex="1" autofocus>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-3 col-md-6">
+								<button type="submit" class="btn btn-primary">Add</button>
+								<a href="/leagues/<%= league.id %>/owners" class="btn btn-default">Cancel</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		<% } %>
+
+		<% if(locals.error && !locals.create) { %>
+			<div class="alert alert-danger">
+				<b>Error!</b> Something went wrong...
+			</div>
+		<% } %>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-10">
+						<h2 class="panel-title"><%= league.name %></h2>
+						<small>Owners</small>
+					</div>
+					<div class="col-md-2 text-right">
+						<a class="btn btn-primary" href="/leagues/<%= league.id %>/owners?create">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover owners table-media">
+					<tbody>
+						<% league.owners.forEach(function(owner) { %>
+							<tr>
+								<td>
+									<div class="media">
+										<div class="media-left">
+											<img class="media-object profile-image" src="<%= owner.profile %>">
+										</div>
+										<div class="media-body">
+											<%= owner.name %>
+										</div>
+									</div>
+								</td>
+								<td class="col-md-2 text-right">
+									<form method="POST" action="/leagues/<%= league.id %>/owners/delete">
+										<input type="hidden" name="user" value="<%= owner.id %>">
+										<input type="hidden" name="referrer" value="/leagues/<%= league.id %>/owners">
+
+										<div class="btn-group btn-hidden">
+											<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+										</div>
+									</form>
+								</td>
+							</tr>
+						<% }) %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
