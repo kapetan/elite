@@ -1,44 +1,52 @@
 {
-    "league_owners": [
-        "id",
-        "user_id",
-        "league_id",
-        "created_at",
-        "updated_at"
-    ],
-    "league_participants": [
-        "id",
-        "user_id",
-        "league_id",
-        "created_at",
-        "updated_at"
-    ],
-    "leagues": [
-        "created_at",
-        "id",
-        "name",
-        "updated_at"
-    ],
-    "match_participants": [
-        "updated_at",
-        "id",
-        "score",
-        "match_id",
-        "user_id",
-        "created_at"
-    ],
-    "matches": [
-        "id",
-        "league_id",
-        "created_at",
-        "updated_at"
-    ],
-    "users": [
-        "id",
-        "name",
-        "email",
-        "password",
-        "created_at",
-        "updated_at"
-    ]
+  "integrations": [
+    "created_at",
+    "data",
+    "type_id",
+    "league_id",
+    "id",
+    "updated_at"
+  ],
+  "league_owners": [
+    "user_id",
+    "league_id",
+    "created_at",
+    "updated_at",
+    "id"
+  ],
+  "league_participants": [
+    "id",
+    "user_id",
+    "league_id",
+    "created_at",
+    "updated_at"
+  ],
+  "leagues": [
+    "id",
+    "updated_at",
+    "created_at",
+    "name"
+  ],
+  "match_participants": [
+    "id",
+    "updated_at",
+    "created_at",
+    "user_id",
+    "match_id",
+    "score"
+  ],
+  "matches": [
+    "created_at",
+    "league_id",
+    "id",
+    "updated_at"
+  ],
+  "users": [
+    "created_at",
+    "id",
+    "updated_at",
+    "name",
+    "email",
+    "password"
+  ]
 }

@@ -93,6 +93,43 @@
 				</table>
 			</div>
 		</div>
+
+		<% integrations.forEach(function(integration) { %>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title"><%= league.name %></h2>
+					<small><%= integration.name %></small>
+				</div>
+				<div class="panel-body">
+					<form class="form-horizontal" method="POST" action="/leagues/<%= league.id %>/integrations/<%= integration.id %>">
+						<input type="hidden" name="referrer" value="/leagues/<%= league.id %>/owners">
+
+						<% integration.fields.forEach(function(field) { %>
+							<div class="form-group">
+								<label for="field-<%= field %>" class="col-md-3 control-label">
+									<%= integration.schema.properties[field].description %>
+								</label>
+								<div class="col-md-6">
+									<input
+										name="<%= field %>"
+										type="text"
+										class="form-control"
+										id="field-<%= field %>"
+										value="<%= integration.data[field] %>"
+										placeholder="<%= integration.schema.properties[field].example %>">
+								</div>
+							</div>
+						<% }) %>
+
+						<div class="form-group">
+							<div class="col-md-offset-3 col-md-6">
+								<button type="submit" class="btn btn-default">Save</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		<% }) %>
 	</div>
 </body>
 </html>

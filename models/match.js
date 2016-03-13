@@ -25,6 +25,14 @@ var Match = function(data) {
 		participant.user = (user instanceof User) ? user : new User(user);
 	});
 
+	var self = this;
+
+	data.participants.forEach(function(participant) {
+		self.draw = participant.score === data.participants[0].score;
+		self.winner = !self.winner || self.winner.score < participant.score ? participant : self.winner;
+		self.loser = self.winner !== participant ? participant : null;
+	});
+
 	extend(this, data);
 
 	this.date = moment(data.created_at).format('dddd, DD MMMM');

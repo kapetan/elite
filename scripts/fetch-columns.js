@@ -22,7 +22,7 @@ db
 			json[row.table_name].push(row.column_name);
 		});
 
-		json = JSON.stringify(json, null, 4);
+		json = JSON.stringify(json, null, 2);
 
 		var filename = path.join(__dirname, '..', 'columns.json');
 

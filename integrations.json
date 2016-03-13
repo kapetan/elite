@@ -1,0 +1,21 @@
+[
+  {
+    "id": 0,
+    "service": "slack",
+    "type": "incoming_webhook",
+    "name": "Slack Incoming Webhook",
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "webhook": {
+          "type": "string",
+          "description": "Incoming Webhook URL",
+          "format": "uri",
+          "example": "https://hooks.slack.com/services/xxx/yyy/zzz"
+        }
+      },
+      "required": ["webhook"]
+    }
+  }
+]

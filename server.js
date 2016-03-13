@@ -12,6 +12,7 @@ var gravatar = require('gravatar');
 var User = require('./models/user');
 var League = require('./models/league');
 var Match = require('./models/match');
+var Integration = require('./models/integration');
 
 var PORT = process.env.PORT || 20202;
 var ENV = process.env.NODE_ENV || 'development';
@@ -302,22 +303,33 @@ app.post('/leagues/{league}/matches', function(req, res, next) {
 
 		if(!all) return next(errors.UnprocessableEntity('Participant not in league'));
 
-		Match.create(participants, league, function(err) {
+		Match.create(participants, league, function(err, match) {
 			if(err) return next(err);
-			res.redirect('/leagues/' + league.id + '/matches');
+
+			Integration.notify({ league_id: league.id }, league, match, function(err) {
+				if(err) return next(err);
+				res.redirect('/leagues/' + league.id + '/matches');
+			});
 		});
 	});
 });
 
 app.get('/leagues/{league}/owners', function(req, res, next) {
-	var create = ('create' in req.query);
-	var error = ('error' in req.query);
+	var league = req.league;
 
-	res.render('owners.html', {
-		league: req.league,
-		user: req.user,
-		create: create,
-		error: error
+	Integration.types({ league_id: league.id }, function(err, integrations) {
+		if(err) return next(err);
+
+		var create = ('create' in req.query);
+		var error = ('error' in req.query);
+
+		res.render('owners.html', {
+			league: league,
+			user: req.user,
+			integrations: integrations,
+			create: create,
+			error: error
+		});
 	});
 });
 
@@ -359,6 +371,20 @@ app.post('/leagues/{league}/owners/delete', function(req, res, next) {
 				if(err) return next(err);
 				res.redirect('/leagues/' + league.id + '/owners');
 			});
+		});
+	});
+});
+
+app.post('/leagues/{league}/integrations/{integration}', function(req, res, next) {
+	req.form(function(body) {
+		var league = req.league;
+		var isOwner = league.findOwner(req.user);
+
+		if(!isOwner) return next(errors.Forbidden('Only league owners can update integrations'));
+
+		Integration.upsert(req.params.integration, body, league, function(err) {
+			if(err) return next(err);
+			res.redirect('/leagues/' + league.id + '/owners');
 		});
 	});
 });
