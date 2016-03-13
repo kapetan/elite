@@ -28,9 +28,11 @@ var Match = function(data) {
 	var self = this;
 
 	data.participants.forEach(function(participant) {
+		var current = self.winner;
+
 		self.draw = participant.score === data.participants[0].score;
 		self.winner = !self.winner || self.winner.score < participant.score ? participant : self.winner;
-		self.loser = self.winner !== participant ? participant : null;
+		self.loser = self.winner !== participant ? participant : current;
 	});
 
 	extend(this, data);

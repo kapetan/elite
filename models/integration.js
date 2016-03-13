@@ -145,13 +145,13 @@ Integration.upsert = function(type, data, league, callback) {
 Integration.notify = function(query, league, match, callback) {
 	if(!callback && typeof match === 'function') return Integration.notify({}, league, match, callback);
 
-	Integration.types(query, function(err, types) {
+	Integration.all(query, function(err, integrations) {
 		if(err) return callback(err);
 
 		var next = afterAll(callback);
 
-		types.forEach(function(type) {
-			type.notify(league, match, type.data, next());
+		integrations.forEach(function(integration) {
+			integration.type.notify(league, match, integration.data, next());
 		});
 	});
 };
