@@ -287,7 +287,7 @@ Match.rankings = function(league, callback) {
 	};
 
 	var transform = through.obj(write);
-	var pump = pumpify(stream, transform);
+	var pump = pumpify.obj(stream, transform);
 
 	collect(pump, function(err) {
 		if(err) return callback(err);
