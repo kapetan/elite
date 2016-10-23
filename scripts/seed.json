@@ -1,0 +1,77 @@
+{
+	"users": [
+		{ "name": "Mirza Kapetanovic", "email": "mirza@example.com", "password": "pass" },
+		{ "name": "Kasper Kronborg", "email": "kasper@example.com", "password": "pass" },
+		{ "name": "Andrea Baccenetti", "email": "andrea@example.com", "password": "pass" },
+		{ "name": "Sergio Llorian", "email": "sergio@example.com", "password": "pass" },
+		{ "name": "Ivan Petrov", "email": "ivan@example.com", "password": "pass" },
+		{ "name": "Razvan Toma", "email": "razvan@example.com", "password": "pass" }
+	],
+	"leagues": [
+		{
+			"name": "Office Space",
+			"owners": ["mirza@example.com"],
+			"participants": [
+				"mirza@example.com",
+				"kasper@example.com",
+				"andrea@example.com",
+				"sergio@example.com",
+				"ivan@example.com"
+			]
+		},
+		{
+			"name": "Eastern Promises",
+			"owners": [
+				"mirza@example.com",
+				"ivan@example.com"
+			],
+			"participants": [
+				"mirza@example.com",
+				"razvan@example.com",
+				"ivan@example.com"
+			]
+		},
+		{
+			"name": "Etnisk Dansk Forening",
+			"owners": ["kasper@example.com"],
+			"participants": ["kasper@example.com"]
+		}
+	],
+	"matches": [
+		{
+			"league": 0,
+			"participants": [
+				{ "user": "mirza@example.com", "score": 2 },
+				{ "user": "kasper@example.com", "score": 1 }
+			]
+		},
+		{
+			"league": 0,
+			"participants": [
+				{ "user": "kasper@example.com", "score": 2 },
+				{ "user": "andrea@example.com", "score": 0 }
+			]
+		},
+		{
+			"league": 0,
+			"participants": [
+				{ "user": "ivan@example.com", "score": 3 },
+				{ "user": "kasper@example.com", "score": 1 }
+			]
+		},
+		{
+			"league": 0,
+			"participants": [
+				{ "user": "mirza@example.com", "score": 2 },
+				{ "user": "sergio@example.com", "score": 2 }
+			]
+		},
+		{
+			"league": 1,
+			"participants": [
+				{ "user": "mirza@example.com", "score": 2 },
+				{ "user": "ivan@example.com", "score": 2 }
+			]
+		}
+	]
+}

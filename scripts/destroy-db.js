@@ -5,6 +5,7 @@ var onerror = function(err) {
 };
 
 db.schema
+	.dropTableIfExists('integrations')
 	.dropTableIfExists('match_participants')
 	.dropTableIfExists('matches')
 	.dropTableIfExists('league_participants')
